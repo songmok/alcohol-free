@@ -51,7 +51,7 @@ const Info = async (marker, index) => {
 };
 
 const Maps = () => {
-  const [loading, setLoading] = useState(true); // 로딩 중 여부 상태
+  const [loading, setLoading] = useState(false); // 로딩 중 여부 상태
 
   const [addrs, setAddrs] = useState([
     {

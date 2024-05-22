@@ -51,7 +51,7 @@ const marketInfo = async () => {
 const StoreMapPage = () => {
   const [marketData, setMarketData] = useState([]);
 
-  const [loading, setLoading] = useState(true); // 로딩 중 여부 상태
+  const [loading, setLoading] = useState(false); // 로딩 중 여부 상태
 
   const [addrs, setAddrs] = useState([
     {
@@ -136,7 +136,6 @@ const StoreMapPage = () => {
         alert("서버 불안정");
       },
     });
-
   }, [markers]);
 
   // 맵 로딩시 나옴
@@ -193,8 +192,7 @@ const StoreMapPage = () => {
                         key={index}
                         position={marker.position}
                         clickable={true}
-                      >
-                      </MapMarker>
+                      ></MapMarker>
                     );
                   }
                 })}

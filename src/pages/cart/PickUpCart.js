@@ -8,13 +8,14 @@ import { TotalPayWrap, TotalTh } from "../../styles/cart/CartTableCss";
 import { BigButton, SButton } from "../../styles/common/reviewProductCss";
 import { TableCustom } from "../../styles/common/tableCss";
 import { cartCountState } from "../../atom/CountState";
+import CountKey from "../../components/basic/CountKey";
+import { useMutation } from "react-query";
 
 const PickUpCart = ({ pickupData }) => {
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useRecoilState(cartCountState);
   const [showModal, setShowModal] = useState(false);
-  // const [count, setCount] = useState(1);
-  console.log("cart-component : ", pickupData);
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -28,12 +29,11 @@ const PickUpCart = ({ pickupData }) => {
 
   const totalOrderAmount = pickupData => {
     let total = 0;
-    pickupData.forEach(item => {
+    pickupData?.forEach(item => {
       total += item.price * item.amount;
     });
     return total;
   };
-  console.log("토탈", totalOrderAmount);
 
   const columnsH = [
     {
@@ -42,9 +42,9 @@ const PickUpCart = ({ pickupData }) => {
     },
     {
       title: "이미지",
-      dataIndex: "pic",
-      render: () => (
-        <img style={{ width: "80px" }} src="/images/moon.jpg" alt="리뷰 작성" />
+      dataIndex: "picture",
+      render: (pic, record) => (
+        <img style={{ width: "80px" }} src={`${pic}`} alt={`${pic}`} />
       ),
     },
     {
@@ -57,13 +57,10 @@ const PickUpCart = ({ pickupData }) => {
     },
     {
       title: "수량",
-      dataIndex: "amount",
+      dataIndex: "key",
       render: (text, record) => (
         <div style={{ display: "flex", justifyContent: "center" }}>
           {record.amount}
-          {/* <CountKey id={record.key} count={record.amount} /> */}
-          {/* {console.log("record.key:", record.key)} */}
-          {/* {console.log("record.count:", record.count)} */}
         </div>
       ),
     },
@@ -79,14 +76,26 @@ const PickUpCart = ({ pickupData }) => {
     },
     {
       title: "삭제",
-      render: (_, record) => (
+      render: record => (
         <div>
-          <SButton>삭제</SButton>
+          <SButton onClick={handleDelete(record)}>삭제</SButton>
         </div>
       ),
     },
   ];
+  const handleDelete = re => {
+    console.log("rerererere", re);
+    // const postCard = {
+    //   stock: re.code,
+    //   amount: count,
+    //   price: serverData[0].price,
+    // };
+  };
 
+  // const deleteCartMutation = useMutation({
+  //   mutationFn: () => deleteAddCart({ postcard }),
+  //   onSuccess: () => {},
+  // });
   return (
     <div>
       <ConfigProvider
@@ -126,7 +135,6 @@ const PickUpCart = ({ pickupData }) => {
         </TotalTh>
         <TotalTh>
           <PB20>{totalOrderAmount(pickupData).toLocaleString()} 원</PB20>
-
           <PB20>0원</PB20>
           <PB20>=</PB20>
           <PB20>{totalOrderAmount(pickupData).toLocaleString()} 원</PB20>

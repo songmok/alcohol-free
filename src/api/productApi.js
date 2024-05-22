@@ -58,15 +58,15 @@ export const getAlcholType = async (mainCategory, subCategory) => {
   }
 };
 
-export const nonSignAlcholSearch = async ( {search} ) => {
+export const nonSignAlcholSearch = async ({ search }) => {
   console.log("axios-data", search);
   try {
-    console.log('여기오나')
+    console.log("여기오나");
     const response = await axios.post(
       `${SERVER_URL}/main/anony/contents`,
       search,
     );
-    console.log(response.status)
+    console.log(response.status);
     if (response.status === 200) {
       console.log("result", response.data);
       const result = response.data;
@@ -75,7 +75,7 @@ export const nonSignAlcholSearch = async ( {search} ) => {
       console.log("no");
     }
   } catch (error) {
-    alert(error.response.data.errorMessage)
+    alert(error.response.data.errorMessage);
   }
 };
 
@@ -172,6 +172,22 @@ export const postAddCart = async ({ postcard }) => {
   console.log("ax :", postcard);
   try {
     const response = await jwtAxios.post(
+      `${SERVER_URL}/shoppingbasket`,
+      postcard,
+    );
+    if (response.status === 200) {
+      console.log("result :", response.data);
+      return response.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteAddCart = async ({ postcard }) => {
+  console.log("ax :", postcard);
+  try {
+    const response = await jwtAxios.delete(
       `${SERVER_URL}/shoppingbasket`,
       postcard,
     );
