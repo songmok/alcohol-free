@@ -15,7 +15,6 @@ const CartPage = () => {
   const [activeNavBt, setActiveNavBt] = useState(1);
   const handleBtClick = cartId => {
     setActiveNavBt(cartId);
-    console.log("선택된 카트버튼", cartId);
   };
 
   const InfoWrap = styled.div`

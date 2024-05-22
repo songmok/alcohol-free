@@ -5,7 +5,7 @@ import { P16, P20, P30, PB20, PB30 } from "../../styles/basic";
 import { Common } from "../../styles/CommonCss";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { UlStyle } from "../../components/detail/DetailInfo";
 import { GoCartModal, GoMapModal } from "../../components/detail/GoCart";
 import ListLi from "../../components/detail/ListLi";
@@ -39,10 +39,10 @@ const DetailedItemPage = () => {
   const navigate = useNavigate();
   const productItem = ProductItemData[0];
   const selectedPlace = useRecoilValue(placeState);
-  const selectedStockNum = useRecoilValue(stockState);
   const [count, setCount] = useState(1);
   const [isHeartChecked, setHeartChecked] = useState(1);
 
+  const [stock, setStock] = useRecoilState(stockState);
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const [isCartModalOpen, setCartModalOpen] = useState(false);
 
@@ -75,7 +75,6 @@ const DetailedItemPage = () => {
   const handleHeartButtonClick = () => {
     const newValue = !isHeartChecked ? 1 : 0;
     setHeartChecked(!isHeartChecked);
-    console.log("하트클리이이이잉익", newValue);
   };
 
   const AA = styled.div`
@@ -90,12 +89,10 @@ const DetailedItemPage = () => {
   // @AREA
 
   const { code } = useParams();
-  // console.log("params ", code);
 
   const detailParam = {
     code: Number(code),
   };
-  console.log(detailParam);
 
   const initState = [
     {
@@ -140,7 +137,6 @@ const DetailedItemPage = () => {
   const contents = serverData[0].content;
   const nations = serverData[0].nation;
   const review = serverData[0].reviewcacount;
-  // console.log("fff : ", taste);
   const taste = tastes;
   console.log("array : ", taste);
   const categoryArray = [
@@ -151,7 +147,6 @@ const DetailedItemPage = () => {
   // -------------------찜목록 추가 기능 start ---------------------------
   const fetchData = () => {
     handleHeartButtonClick();
-    // console.log("상품 코드 제발 찜추가:", detailParam.code);
     postWish({
       code: {
         code: detailParam.code,
@@ -179,14 +174,12 @@ const DetailedItemPage = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  // console.log("stock num : ", selectedStockNum);
 
   const postCard = {
-    stock: selectedStockNum,
+    stock: code,
     amount: count,
     price: serverData[0].price,
   };
-  // console.log("ㅍㅋ : ", postCard);
 
   // -------------------찜목록 추가 기능 end ---------------------------
   const buy = async () => {
@@ -198,13 +191,13 @@ const DetailedItemPage = () => {
       email: info.email,
     });
   };
-
+  console.log("sersefijsoeifrjseoif", stock);
   useEffect(() => {
-    if(userInfo.nickname !== ''){
+    if (userInfo.nickname !== "") {
       navigate("/directpay/buy", { state: { info: userInfo } });
     }
-    
-}, [userInfo]);
+    setStock(serverData[0]?.code);
+  }, [userInfo]);
 
   return (
     <ItemWrap>
@@ -282,7 +275,7 @@ const DetailedItemPage = () => {
             </P30>
           </TotalAmount>
           <div className="pay-button">
-            <GoCartModal postcard={postCard} />
+            <GoCartModal postcard={postCard} setStock={setStock} />
 
             <BigButton
               onClick={async () => {

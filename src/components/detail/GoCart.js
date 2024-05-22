@@ -5,12 +5,11 @@ import CartModal from "../modal/CartModal";
 import { Common } from "../../styles/CommonCss";
 import { useParams } from "react-router-dom";
 import { useMutation } from "react-query";
-import { postAddCart } from "../../api/productApi";
+import { deleteAddCart, postAddCart } from "../../api/productApi";
 
 export const GoMapModal = () => {
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const { code } = useParams();
-  console.log("ce : ", code);
   const handleOpenMapModal = () => {
     setMapModalOpen(true);
   };
@@ -19,7 +18,6 @@ export const GoMapModal = () => {
     setMapModalOpen(false);
   };
 
-  // console.log("ff :", code);
   return (
     <div>
       {isMapModalOpen && <MapModal onClose={handleCloseMapModal} code={code} />}
@@ -38,8 +36,8 @@ export const GoCartModal = ({ postcard }) => {
       setCartModalOpen(true);
     },
   });
+
   const handleOpenCartModal = () => {
-    // console.log("ok", postcard);
     addCartMutation.mutate(postcard);
   };
 
