@@ -18,7 +18,7 @@ const MapPlaceInfo = ({ place, onClose }) => {
     setSelectedStockNum(place.stocknumber);
     onClose();
   };
-  console.log("ffff ff :", place);
+
   return (
     <div>
       <PlaceWrap

@@ -8,5 +8,5 @@ const initialCartCount = PCartData.reduce((acc, current) => {
 
 export const cartCountState = atom({
   key: "cartCountState",
-  default: 0,
+  default: initialCartCount,
 });

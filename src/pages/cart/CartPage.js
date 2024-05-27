@@ -8,7 +8,7 @@ import { Common } from "../../styles/CommonCss";
 import PickUpCart from "./PickUpCart";
 import ShippingCart from "./ShippingCart";
 import { useQuery } from "react-query";
-import { getCart } from "../../api/cartApi";
+import { cartPickUpGetApi } from "../../api/cartGetApi";
 import BasicLayout from "../../layout/BasicLayout";
 
 const CartPage = () => {
@@ -30,7 +30,7 @@ const CartPage = () => {
 
   const { data: pickupData } = useQuery({
     queryKey: [],
-    queryFn: () => getCart(),
+    queryFn: () => cartPickUpGetApi({ shopInfo: "pickup" }),
   });
   // const serverData = data;
   console.log("cart-data : ", pickupData);

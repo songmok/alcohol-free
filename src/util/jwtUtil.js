@@ -10,19 +10,15 @@ const jwtAxios = axios.create();
 // 요청(request) intercepter
 // request 가 문제가 있든, 없든 실행될 내용 작성
 const beforeReq = config => {
-  console.log("1. 요청전 전달 .... ", config);
-  console.log("2. 쿠키로 토큰가져오기");
   const memberInfo = getCookie("member");
 
   if (!memberInfo) {
-    console.log("쿠키 정보 없네요.");
     // axios 요청을 중단합니다.
     return Promise.reject({ response: { data: { error: "Login 하세요." } } });
   }
 
-  console.log("3. 쿠키에서 토큰 정보를 뜯는다");
   const accessToken = memberInfo;
-  console.log("4. 액세스토큰 정보", accessToken);
+  console.log(accessToken);
   // 요청한 Request 에 headers 에 형식이 있어요.
   // jwt 액세스토큰을 붙일때 형식이 있어요.
   // config 는 요청한 axios 이고

@@ -29,8 +29,6 @@ import { StarRev } from "../../styles/common/StarCss";
 import { stockState } from "../../atom/stockState";
 import ListLi2 from "../../components/detail/ListLi2";
 import ListLi3 from "../../components/detail/ListLi3";
-import axios from "axios";
-import jwtAxios from "../../util/jwtUtil";
 import { buypage } from "../../api/directPayApi";
 
 export const items1 = ["1", "2", "3"];
@@ -41,7 +39,7 @@ const DetailedItemPage = () => {
   const selectedPlace = useRecoilValue(placeState);
   const [count, setCount] = useState(1);
   const [isHeartChecked, setHeartChecked] = useState(1);
-
+  const [selectedOption, setSelectedOption] = useState("");
   const [stock, setStock] = useRecoilState(stockState);
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const [isCartModalOpen, setCartModalOpen] = useState(false);
@@ -118,8 +116,7 @@ const DetailedItemPage = () => {
   });
 
   const serverData = data || initState;
-  // console.log("response", serverData[0].name);
-
+  console.log("serverData", serverData);
   const starImages = Array.from(
     { length: serverData[0].ratingaverage },
     (_, index) => (
@@ -138,7 +135,7 @@ const DetailedItemPage = () => {
   const nations = serverData[0].nation;
   const review = serverData[0].reviewcacount;
   const taste = tastes;
-  console.log("array : ", taste);
+
   const categoryArray = [
     `${serverData[0].maincategory}`,
     `${serverData[0].subcategory}`,
@@ -166,6 +163,7 @@ const DetailedItemPage = () => {
   };
 
   const totalPrice = serverData[0]?.price * count;
+
   const addComma = price => {
     let returnString = price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return returnString;
@@ -176,12 +174,14 @@ const DetailedItemPage = () => {
   };
 
   const postCard = {
-    stock: code,
+    alcoholcode: code,
+    marketname: selectedPlace,
     amount: count,
-    price: serverData[0].price,
+    delivery: selectedOption,
   };
-
+  console.log("postCard", postCard);
   // -------------------찜목록 추가 기능 end ---------------------------
+
   const buy = async () => {
     const info = await buypage();
     setUserInfo({
@@ -191,7 +191,7 @@ const DetailedItemPage = () => {
       email: info.email,
     });
   };
-  console.log("sersefijsoeifrjseoif", stock);
+
   useEffect(() => {
     if (userInfo.nickname !== "") {
       navigate("/directpay/buy", { state: { info: userInfo } });
@@ -240,7 +240,6 @@ const DetailedItemPage = () => {
               {serverData ? (
                 <li>{selectedPlace}</li>
               ) : (
-                // <div></div>
                 <li>판매처를 선택해주세요</li>
               )}
               {/* <li>화이트 와인</li> */}
@@ -254,9 +253,10 @@ const DetailedItemPage = () => {
                     fontSize: "16px",
                     // borderRadius: "5px",
                   }}
+                  onChange={event => setSelectedOption(event.target.value)}
                 >
-                  <option>픽업</option>
-                  <option>배송</option>
+                  <option value="PickUp">픽업</option>
+                  <option value="Delivery">배송</option>
                 </select>
               </li>
             </ul>
@@ -264,6 +264,7 @@ const DetailedItemPage = () => {
           {/* <Count /> */}
           <div className="count">
             <p className="product-name">{serverData[0].name}</p>
+            {/* 장바구니 */}
             <Count name="productCnt" setCount={setCount} count={count} />
             <p>{serverData[0].price}원</p>
           </div>
@@ -276,7 +277,6 @@ const DetailedItemPage = () => {
           </TotalAmount>
           <div className="pay-button">
             <GoCartModal postcard={postCard} setStock={setStock} />
-
             <BigButton
               onClick={async () => {
                 await buy();

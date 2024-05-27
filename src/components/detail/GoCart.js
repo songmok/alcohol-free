@@ -6,9 +6,12 @@ import { Common } from "../../styles/CommonCss";
 import { useParams } from "react-router-dom";
 import { useMutation } from "react-query";
 import { deleteAddCart, postAddCart } from "../../api/productApi";
+import { useSetRecoilState } from "recoil";
+import { cartCountState } from "../../atom/CountState";
 
 export const GoMapModal = () => {
   const [isMapModalOpen, setMapModalOpen] = useState(false);
+
   const { code } = useParams();
   const handleOpenMapModal = () => {
     setMapModalOpen(true);
@@ -29,6 +32,8 @@ export const GoMapModal = () => {
 //
 export const GoCartModal = ({ postcard }) => {
   const [isCartModalOpen, setCartModalOpen] = useState(false);
+  // const cartCount = useSetRecoilState(cartCountState);
+
   // 장바구니 넣기
   const addCartMutation = useMutation({
     mutationFn: () => postAddCart({ postcard }),
@@ -39,6 +44,7 @@ export const GoCartModal = ({ postcard }) => {
 
   const handleOpenCartModal = () => {
     addCartMutation.mutate(postcard);
+    // cartCount();
   };
 
   const handleCloseCartModal = () => {

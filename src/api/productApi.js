@@ -59,16 +59,12 @@ export const getAlcholType = async (mainCategory, subCategory) => {
 };
 
 export const nonSignAlcholSearch = async ({ search }) => {
-  console.log("axios-data", search);
   try {
-    console.log("여기오나");
     const response = await axios.post(
       `${SERVER_URL}/main/anony/contents`,
       search,
     );
-    console.log(response.status);
     if (response.status === 200) {
-      console.log("result", response.data);
       const result = response.data;
       return result;
     } else {
@@ -109,15 +105,13 @@ export const SignAlcholSearch = async ({ search }) => {
 };
 
 export const getDetail = async ({ code }) => {
-  console.log("axios", code);
   const codeParam = {
     code: Number(code),
   };
-  console.log("params  ", codeParam);
+
   try {
     const response = await jwtAxios.post(`${SERVER_URL}/detail`, codeParam);
     if (response.status === 200) {
-      console.log("R : ", response.data);
       return response.data;
     } else {
       console.log("no");
@@ -151,7 +145,6 @@ export const getUserRecent = async () => {
 };
 
 export const getMarketPath = async ({ code }) => {
-  console.log("ax:", code);
   const postcode = {
     code: code,
   };
@@ -169,25 +162,14 @@ export const getMarketPath = async ({ code }) => {
 };
 
 export const postAddCart = async ({ postcard }) => {
-  console.log("ax :", postcard);
+  // const body = {
+  //   alcoholcode: code,
+  //   marketname: market,
+  //   amount: amount,
+  //   delivery: delivery,
+  // };
   try {
     const response = await jwtAxios.post(
-      `${SERVER_URL}/shoppingbasket`,
-      postcard,
-    );
-    if (response.status === 200) {
-      console.log("result :", response.data);
-      return response.data;
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const deleteAddCart = async ({ postcard }) => {
-  console.log("ax :", postcard);
-  try {
-    const response = await jwtAxios.delete(
       `${SERVER_URL}/shoppingbasket`,
       postcard,
     );

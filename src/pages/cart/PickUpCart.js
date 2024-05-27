@@ -13,7 +13,7 @@ import { useMutation } from "react-query";
 
 const PickUpCart = ({ pickupData }) => {
   const navigate = useNavigate();
-  const [cartCount, setCartCount] = useRecoilState(cartCountState);
+  // const [cartCount, setCartCount] = useRecoilState(cartCountState);
   const [showModal, setShowModal] = useState(false);
 
   const handleCloseModal = () => {
@@ -60,6 +60,7 @@ const PickUpCart = ({ pickupData }) => {
       dataIndex: "key",
       render: (text, record) => (
         <div style={{ display: "flex", justifyContent: "center" }}>
+          <CountKey id={record.key} />
           {record.amount}
         </div>
       ),
