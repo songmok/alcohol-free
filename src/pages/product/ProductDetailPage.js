@@ -39,7 +39,7 @@ const DetailedItemPage = () => {
   const selectedPlace = useRecoilValue(placeState);
   const [count, setCount] = useState(1);
   const [isHeartChecked, setHeartChecked] = useState(1);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("PickUp");
   const [stock, setStock] = useRecoilState(stockState);
   const [isMapModalOpen, setMapModalOpen] = useState(false);
   const [isCartModalOpen, setCartModalOpen] = useState(false);

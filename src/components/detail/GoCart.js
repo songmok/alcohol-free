@@ -32,9 +32,7 @@ export const GoMapModal = () => {
 //
 export const GoCartModal = ({ postcard }) => {
   const [isCartModalOpen, setCartModalOpen] = useState(false);
-  // const cartCount = useSetRecoilState(cartCountState);
 
-  // 장바구니 넣기
   const addCartMutation = useMutation({
     mutationFn: () => postAddCart({ postcard }),
     onSuccess: () => {
@@ -44,7 +42,6 @@ export const GoCartModal = ({ postcard }) => {
 
   const handleOpenCartModal = () => {
     addCartMutation.mutate(postcard);
-    // cartCount();
   };
 
   const handleCloseCartModal = () => {

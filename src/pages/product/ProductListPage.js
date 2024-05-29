@@ -101,7 +101,6 @@ const ProductPage = ({ test }) => {
   // 토큰있냐 없냐..에 따라 실행..?
   const handleClickSearch = () => {
     if (isLogin) {
-      console.log("일로왔냐");
       UserSearchMutation.mutate(alcoholSearch);
     } else {
       SearchMutation.mutate(alcoholSearch);

@@ -1,5 +1,5 @@
 import { ConfigProvider } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
 import { Common } from "../../styles/CommonCss";
@@ -15,6 +15,7 @@ const PickUpCart = ({ pickupData }) => {
   const navigate = useNavigate();
   // const [cartCount, setCartCount] = useRecoilState(cartCountState);
   const [showModal, setShowModal] = useState(false);
+  const [countState, setCountState] = useRecoilState(cartCountState);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -34,6 +35,10 @@ const PickUpCart = ({ pickupData }) => {
     });
     return total;
   };
+
+  useEffect(() => {
+    setCountState(pickupData);
+  }, []);
 
   const columnsH = [
     {
@@ -60,8 +65,7 @@ const PickUpCart = ({ pickupData }) => {
       dataIndex: "key",
       render: (text, record) => (
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <CountKey id={record.key} />
-          {record.amount}
+          <CountKey id={record.key} countState={record} />
         </div>
       ),
     },
@@ -84,8 +88,8 @@ const PickUpCart = ({ pickupData }) => {
       ),
     },
   ];
+
   const handleDelete = re => {
-    console.log("rerererere", re);
     // const postCard = {
     //   stock: re.code,
     //   amount: count,
