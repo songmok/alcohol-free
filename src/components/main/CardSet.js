@@ -4,7 +4,7 @@ import { CardContainer, CardFlex } from "../../styles/main/cardStlye";
 import { Common } from "../../styles/CommonCss";
 
 import { useNavigate } from "react-router";
-import useCustomMove from '../../hooks/useCustomMove';
+import useCustomMove from "../../hooks/useCustomMove";
 
 const initState = [
   {
@@ -34,16 +34,11 @@ const CardSet = ({ data }) => {
           <CardContainer key={index}>
             <a
               onClick={() => {
-                console.log(product,'evvvvvvvvvvvvvvv')
-                moveToDetail(product?.code)
+                moveToDetail(product?.code);
                 window.scrollTo(0, 0); // 페이지 상단으로 스크롤 이동
               }}
             >
-              <img
-                className="card-img"
-                src={picSrc}
-                alt={product.picture}
-              />
+              <img className="card-img" src={picSrc} alt={product.picture} />
             </a>
 
             <CardFlex>

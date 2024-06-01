@@ -29,7 +29,7 @@ const CartPage = () => {
   // Get API
 
   const { data: pickupData } = useQuery({
-    queryKey: [],
+    queryKey: ["cartQuery"],
     queryFn: () => cartPickUpGetApi({ shopInfo: "pickup" }),
   });
   // const serverData = data;

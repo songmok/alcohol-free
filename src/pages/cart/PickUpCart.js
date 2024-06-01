@@ -9,21 +9,22 @@ import { BigButton, SButton } from "../../styles/common/reviewProductCss";
 import { TableCustom } from "../../styles/common/tableCss";
 import { cartCountState } from "../../atom/CountState";
 import CountKey from "../../components/basic/CountKey";
-import { useMutation } from "react-query";
+import CartDeleteModal from "../../components/modal/CartDeleteModal";
 
 const PickUpCart = ({ pickupData }) => {
   const navigate = useNavigate();
-  // const [cartCount, setCartCount] = useRecoilState(cartCountState);
-  const [showModal, setShowModal] = useState(false);
+
+  const [isCartDeleteModalOpen, setCartDeleteModalOpen] = useState(false);
   const [countState, setCountState] = useRecoilState(cartCountState);
+  const [deleteState, setDeleteState] = useState({});
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseCartDeleteModal = () => {
+    setCartDeleteModalOpen(false);
   };
-  const handleShowModal = () => {
-    setShowModal(true);
+  const handleOpenCartDeleteModal = data => {
+    setDeleteState(data);
+    setCartDeleteModalOpen(true);
   };
-
   const calculatePaymentAmount = (price, amount) => {
     return (price * amount).toLocaleString(); // 콤마를 추가하여 반환합니다.
   };
@@ -35,10 +36,6 @@ const PickUpCart = ({ pickupData }) => {
     });
     return total;
   };
-
-  useEffect(() => {
-    setCountState(pickupData);
-  }, []);
 
   const columnsH = [
     {
@@ -64,7 +61,10 @@ const PickUpCart = ({ pickupData }) => {
       title: "수량",
       dataIndex: "key",
       render: (text, record) => (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{ display: "flex", justifyContent: "center" }}
+          key={record.id}
+        >
           <CountKey id={record.key} countState={record} />
         </div>
       ),
@@ -73,7 +73,10 @@ const PickUpCart = ({ pickupData }) => {
       title: "결제금액",
       dataIndex: "price",
       render: (_, record) => (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{ display: "flex", justifyContent: "center" }}
+          key={record.id}
+        >
           {/* {calculatePaymentAmount(record.price, cartCount[record.key])} 원 */}
           {record.price.toLocaleString()}원
         </div>
@@ -83,26 +86,31 @@ const PickUpCart = ({ pickupData }) => {
       title: "삭제",
       render: record => (
         <div>
-          <SButton onClick={handleDelete(record)}>삭제</SButton>
+          <SButton
+            onClick={() => {
+              handleOpenCartDeleteModal(record);
+              setCartDeleteModalOpen(true);
+            }}
+          >
+            삭제
+          </SButton>
         </div>
       ),
     },
   ];
 
-  const handleDelete = re => {
-    // const postCard = {
-    //   stock: re.code,
-    //   amount: count,
-    //   price: serverData[0].price,
-    // };
-  };
-
-  // const deleteCartMutation = useMutation({
-  //   mutationFn: () => deleteAddCart({ postcard }),
-  //   onSuccess: () => {},
-  // });
+  useEffect(() => {
+    setCountState(pickupData);
+  }, []);
+  console.log("deleteState", deleteState);
   return (
     <div>
+      {isCartDeleteModalOpen && (
+        <CartDeleteModal
+          onClose={handleCloseCartDeleteModal}
+          data={deleteState}
+        />
+      )}
       <ConfigProvider
         theme={{
           token: {

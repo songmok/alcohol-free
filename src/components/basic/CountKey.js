@@ -1,54 +1,27 @@
-import React, { useState } from "react";
-
 import {
   CounterButton,
   CounterValue,
   CounterWrapper,
 } from "../../styles/basic/CountCss";
-import { useRecoilState } from "recoil";
-import { cartCountState } from "../../atom/CountState";
-import { useMutation, useQueryClient } from "react-query";
-import { cartPutApi } from "../../api/cartPutApi";
 
-const useCartPutMutation = () => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(
-    ({ code, amount, market, delivery }) =>
-      cartPutApi({ code, amount, market, delivery }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("cart");
-      },
-      onError: error => {
-        console.error("Error updating cart:", error);
-      },
-    },
-  );
-  return { mutate, isLoading };
-};
+import { useCartPutMutation } from "../../api/cartPutApi";
 
 const CountKey = ({ countState }) => {
   const amount = countState.amount;
 
-  const { mutate: cartPutMutation, isLoading: cartPutIsLoading } =
-    useCartPutMutation();
+  const { mutate: cartPutMutation } = useCartPutMutation();
 
   const handleMinus = () => {
     cartPutMutation({
-      code: countState.stock,
-      market: countState.marketname,
+      code: countState.id,
       amount: Math.max(amount - 1, 0),
-      delivery: countState.delivery,
     });
   };
 
   const handlePlus = () => {
     cartPutMutation({
-      code: countState.stock,
-      market: countState.marketname,
+      code: countState.id,
       amount: Math.max(amount + 1),
-      delivery: countState.delivery,
     });
   };
 

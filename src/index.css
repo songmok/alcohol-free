@@ -40,47 +40,47 @@ h1 {
   padding: 0;
 }
 
-.pay{
+.pay {
   margin-top: 50px;
   margin-bottom: 50px;
 }
 
-.payline1{
+.payline1 {
   border-top: 2px solid black;
 }
-.payline2{
+.payline2 {
   border-top: 1px solid black;
 }
 
-.pay .buyinfo > *{
+.pay .buyinfo > * {
   display: inline-block;
 }
-.userinfo{
+.userinfo {
   margin-left: 10%;
   margin-right: 10%;
 }
-.product-info{
+.product-info {
   margin-right: 10%;
 }
-.product-name{
+.product-name {
   margin-right: 10%;
 }
-.product-count{
+.product-count {
   margin-right: 5%;
 }
-.product-price{
+.product-price {
   margin-right: 7%;
 }
-.product-market{
+.product-market {
   margin-right: 8%;
 }
 
-.info{
+.info {
   width: 100%;
   display: flex;
 }
 
-.user{
+.user {
   display: inline-block;
   width: 25%;
   border-right: 1px solid black;
@@ -89,7 +89,7 @@ h1 {
   font-size: 1.2rem;
 }
 
-.product{
+.product {
   margin-top: 25px;
   margin-bottom: 25px;
   display: inline-block;
@@ -98,31 +98,31 @@ h1 {
   overflow-y: scroll;
 }
 
-.product-map{
+.product-map {
   margin-bottom: 10px;
 }
 
-.product-map > *{
+.product-map > * {
   display: inline-block;
 }
 
-.product .product-info{
+.product .product-info {
   margin-right: 11.5%;
 }
-.product .product-name{
+.product .product-name {
   margin-right: 13%;
 }
-.product .product-count{
+.product .product-count {
   margin-right: 7%;
 }
-.product .product-price{
+.product .product-price {
   margin-right: 9%;
 }
-.product .product-market{
+.product .product-market {
   margin-right: 11%;
 }
 
-.user h2{
+.user h2 {
   margin-bottom: 10px;
 }
 
@@ -131,24 +131,25 @@ h1 {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.total h2{
+.total h2 {
   display: inline-block;
   margin-right: 13%;
   margin-left: 13%;
 }
 
-.total h1{
+.total h1 {
   display: inline-block;
   margin-right: 13.1%;
   margin-left: 13.2%;
 }
 
-.paybtndiv{
+.paybtndiv {
   text-align: center;
 }
-.paybtn{
+.paybtn {
   margin-top: 50px;
   width: 30%;
   height: 50px;
   font-size: 2rem;
 }
+

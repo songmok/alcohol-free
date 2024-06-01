@@ -1,14 +1,13 @@
+import { useMutation, useQueryClient } from "react-query";
 import jwtAxios from "../util/jwtUtil";
 import { SERVER_URL } from "./config";
 
-export const cartPutApi = async ({ code, market, delivery, amount }) => {
+export const cartPutApi = async ({ code, amount }) => {
   const body = {
-    alcoholcode: code,
-    marketname: market,
+    id: code,
     amount: amount,
-    delivery: delivery,
   };
-  console.log("body", body);
+
   try {
     const response = await jwtAxios.put(`${SERVER_URL}/shoppingbasket`, body);
     if (response.status === 200) {
@@ -19,4 +18,21 @@ export const cartPutApi = async ({ code, market, delivery, amount }) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const useCartPutMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading } = useMutation(
+    ({ code, amount }) => cartPutApi({ code, amount }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["cartQuery"]);
+      },
+      onError: error => {
+        console.error("Error updating cart:", error);
+      },
+    },
+  );
+  return { mutate, isLoading };
 };
