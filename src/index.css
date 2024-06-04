@@ -153,3 +153,8 @@ h1 {
   font-size: 2rem;
 }
 
+.cart-button {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

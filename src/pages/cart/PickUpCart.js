@@ -1,40 +1,55 @@
 import { ConfigProvider } from "antd";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
 import { Common } from "../../styles/CommonCss";
-import { PB20 } from "../../styles/basic";
-import { TotalPayWrap, TotalTh } from "../../styles/cart/CartTableCss";
-import { BigButton, SButton } from "../../styles/common/reviewProductCss";
+import { SButton } from "../../styles/common/reviewProductCss";
 import { TableCustom } from "../../styles/common/tableCss";
 import { cartCountState } from "../../atom/CountState";
 import CountKey from "../../components/basic/CountKey";
 import CartDeleteModal from "../../components/modal/CartDeleteModal";
-
-const PickUpCart = ({ pickupData }) => {
-  const navigate = useNavigate();
-
-  const [isCartDeleteModalOpen, setCartDeleteModalOpen] = useState(false);
+import { cartPickUpGetApi } from "../../api/cartGetApi";
+import { useQuery } from "react-query";
+import CartAllDeleteModal from "../../components/modal/CartAllDeleteModal";
+import CartOrderDelButton from "../../components/cart/CartOrderDelButton";
+import CartTotalPay from "../../components/cart/CartTotalPay";
+import Divider from "../../components/common/Divider";
+import useModal from "../../hooks/useModal";
+const PickUpCart = () => {
+  const {
+    isOpen: cartDeleteModalIsOpen,
+    modalOpen: cartDeleteModalOpne,
+    modalClose: cartDeleteModalClose,
+  } = useModal();
+  const {
+    isOpen: cartAllDeleteModalIsOpen,
+    modalOpen: cartAllDeleteModalOpne,
+    modalClose: cartAllDeleteModalClose,
+  } = useModal();
   const [countState, setCountState] = useRecoilState(cartCountState);
-  const [deleteState, setDeleteState] = useState({});
+  const [cartDeleteState, setCartDeleteState] = useState({});
+
+  const { data: pickupData } = useQuery({
+    queryKey: ["cartQuery"],
+    queryFn: () => cartPickUpGetApi({ shopInfo: "pickup" }),
+  });
 
   const handleCloseCartDeleteModal = () => {
-    setCartDeleteModalOpen(false);
+    cartDeleteModalClose();
   };
   const handleOpenCartDeleteModal = data => {
-    setDeleteState(data);
-    setCartDeleteModalOpen(true);
-  };
-  const calculatePaymentAmount = (price, amount) => {
-    return (price * amount).toLocaleString(); // 콤마를 추가하여 반환합니다.
+    setCartDeleteState(data);
+    cartDeleteModalOpne();
   };
 
-  const totalOrderAmount = pickupData => {
-    let total = 0;
-    pickupData?.forEach(item => {
-      total += item.price * item.amount;
-    });
-    return total;
+  const handleCloseCartAllDeleteModal = () => {
+    cartAllDeleteModalClose();
+  };
+  const handleOpenCartAllDeleteModal = () => {
+    cartAllDeleteModalOpne();
+  };
+
+  const calculatePaymentAmount = (price, amount) => {
+    return (price * amount).toLocaleString(); // 콤마를 추가하여 반환합니다.
   };
 
   const columnsH = [
@@ -89,7 +104,6 @@ const PickUpCart = ({ pickupData }) => {
           <SButton
             onClick={() => {
               handleOpenCartDeleteModal(record);
-              setCartDeleteModalOpen(true);
             }}
           >
             삭제
@@ -102,14 +116,17 @@ const PickUpCart = ({ pickupData }) => {
   useEffect(() => {
     setCountState(pickupData);
   }, []);
-  console.log("deleteState", deleteState);
+
   return (
     <div>
-      {isCartDeleteModalOpen && (
+      {cartDeleteModalIsOpen && (
         <CartDeleteModal
           onClose={handleCloseCartDeleteModal}
-          data={deleteState}
+          data={cartDeleteState}
         />
+      )}
+      {cartAllDeleteModalIsOpen && (
+        <CartAllDeleteModal onClose={handleCloseCartAllDeleteModal} />
       )}
       <ConfigProvider
         theme={{
@@ -132,48 +149,11 @@ const PickUpCart = ({ pickupData }) => {
         />
         {/* {showModal && <RvModal onClose={handleCloseModal} />} */}
       </ConfigProvider>
-      <div
-        style={{
-          width: "100%",
-          height: "1px",
-          background: `${Common.color.p900}`,
-        }}
-      ></div>
-      <TotalPayWrap>
-        <TotalTh>
-          <PB20>결제금액</PB20>
-          <PB20>배송비</PB20>
-          <PB20></PB20>
-          <PB20>예상결제금액</PB20>
-        </TotalTh>
-        <TotalTh>
-          <PB20>{totalOrderAmount(pickupData).toLocaleString()} 원</PB20>
-          <PB20>0원</PB20>
-          <PB20>=</PB20>
-          <PB20>{totalOrderAmount(pickupData).toLocaleString()} 원</PB20>
-        </TotalTh>
-      </TotalPayWrap>
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "50px",
-        }}
-      >
-        <BigButton
-          style={{
-            background: `${Common.color.b900}`,
-            color: ` ${Common.color.p000}`,
-            border: "none",
-            fontSize: "16px",
-            fontWeight: "normal",
-          }}
-          onClick={() => navigate(`/paycom`)}
-        >
-          주문하기
-        </BigButton>
-      </div>
+      <Divider />
+      <CartTotalPay cartData={pickupData} />
+      <CartOrderDelButton
+        handleOpenCartAllDeleteModal={handleOpenCartAllDeleteModal}
+      />
     </div>
   );
 };

@@ -2,11 +2,11 @@ import { Common } from "../../styles/CommonCss";
 import { CloseBt } from "../../styles/detail/mapModalWrapCss";
 import styled from "@emotion/styled/macro";
 import { BigButton, MarginB40 } from "../../styles/common/reviewProductCss";
-import { PB16, PB20, PB30 } from "../../styles/basic";
-import { useCartDeleteMutation } from "../../api/cartDeleteApi";
+import { PB20 } from "../../styles/basic";
+import { useCartAllDeleteMutation } from "../../api/cartAllDeleteApi";
 
 export const CartDeleteModal = ({ onClose, data }) => {
-  const { mutate: cartDeleteMutation } = useCartDeleteMutation();
+  const { mutate: cartAllDeleteMutation } = useCartAllDeleteMutation();
 
   const CartModalStyle = styled.div`
     position: fixed;
@@ -48,8 +48,9 @@ export const CartDeleteModal = ({ onClose, data }) => {
           </CloseBt>
         </div>
         <CartModalinfo>
-          <PB20 style={{ paddingBottom: "15px" }}>{data.name}</PB20>
-          <PB16>{data.marketname}</PB16>
+          <PB20 style={{ paddingBottom: "15px" }}>
+            장바구니를 비우시겠습니까?
+          </PB20>
           <MarginB40 />
           <BigButton
             style={{
@@ -57,11 +58,11 @@ export const CartDeleteModal = ({ onClose, data }) => {
               border: `1px solid ${Common.color.p300}`,
             }}
             onClick={() => {
-              cartDeleteMutation({ id: data.id });
+              cartAllDeleteMutation();
               onClose();
             }}
           >
-            장바구니 삭제하기
+            장바구니 전체 삭제
           </BigButton>
         </CartModalinfo>
       </CartModalWrap>

@@ -2,11 +2,23 @@ import { Common } from "../../styles/CommonCss";
 import { CloseBt } from "../../styles/detail/mapModalWrapCss";
 import styled from "@emotion/styled/macro";
 import { BigButton, MarginB40 } from "../../styles/common/reviewProductCss";
-import { PB16, PB20, PB30 } from "../../styles/basic";
-import { useCartDeleteMutation } from "../../api/cartDeleteApi";
+import { PB16, PB20 } from "../../styles/basic";
+import { useWishDeleteMutation } from "../../api/wishListApi";
 
-export const CartDeleteModal = ({ onClose, data }) => {
-  const { mutate: cartDeleteMutation } = useCartDeleteMutation();
+export const WishDeleteModal = ({ onClose, data }) => {
+  const { mutate: wishDeleteMutate } = useWishDeleteMutation();
+
+  const fetchData = code => {
+    wishDeleteMutate({
+      code: code,
+      failFn: () => {
+        alert("데이터 호출 실패했습니다");
+      },
+      errorFn: () => {
+        alert("서버상태 불안정 다음에 상품불러오기 시도");
+      },
+    });
+  };
 
   const CartModalStyle = styled.div`
     position: fixed;
@@ -17,7 +29,6 @@ export const CartDeleteModal = ({ onClose, data }) => {
     top: 0;
     width: 100%;
     height: 100%;
-    /* background: rgba(0, 0, 0, 0.7); */
     z-index: 999;
   `;
   const CartModalWrap = styled.div`
@@ -57,11 +68,11 @@ export const CartDeleteModal = ({ onClose, data }) => {
               border: `1px solid ${Common.color.p300}`,
             }}
             onClick={() => {
-              cartDeleteMutation({ id: data.id });
+              fetchData(data.code);
               onClose();
             }}
           >
-            장바구니 삭제하기
+            해당항목 삭제하기
           </BigButton>
         </CartModalinfo>
       </CartModalWrap>
@@ -69,4 +80,4 @@ export const CartDeleteModal = ({ onClose, data }) => {
   );
 };
 
-export default CartDeleteModal;
+export default WishDeleteModal;

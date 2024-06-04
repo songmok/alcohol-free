@@ -2,13 +2,9 @@ import { useMutation, useQueryClient } from "react-query";
 import jwtAxios from "../util/jwtUtil";
 import { SERVER_URL } from "./config";
 
-export const cartDeleteApi = async ({ id }) => {
-  const body = { data: { id: id } };
+export const cartAllDeleteApi = async () => {
   try {
-    const response = await jwtAxios.delete(
-      `${SERVER_URL}/shoppingbasket`,
-      body,
-    );
+    const response = await jwtAxios.delete(`${SERVER_URL}/shoppingbasket/all`);
     if (response.status === 200) {
       return response.data;
     } else {
@@ -20,10 +16,10 @@ export const cartDeleteApi = async ({ id }) => {
   }
 };
 
-export const useCartDeleteMutation = () => {
+export const useCartAllDeleteMutation = () => {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(({ id }) => cartDeleteApi({ id }), {
+  const { mutate, isLoading } = useMutation(() => cartAllDeleteApi(), {
     onSuccess: res => {
       queryClient.invalidateQueries(["cartQuery"]);
     },

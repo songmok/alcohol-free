@@ -7,8 +7,6 @@ import { MarginB20 } from "../../styles/common/reviewProductCss";
 import { Common } from "../../styles/CommonCss";
 import PickUpCart from "./PickUpCart";
 import ShippingCart from "./ShippingCart";
-import { useQuery } from "react-query";
-import { cartPickUpGetApi } from "../../api/cartGetApi";
 import BasicLayout from "../../layout/BasicLayout";
 
 const CartPage = () => {
@@ -23,17 +21,8 @@ const CartPage = () => {
     hr {
       background-color: ${Common.color.b900};
       height: 3px;
-      /* margin-bottom: 20px; */
     }
   `;
-  // Get API
-
-  const { data: pickupData } = useQuery({
-    queryKey: ["cartQuery"],
-    queryFn: () => cartPickUpGetApi({ shopInfo: "pickup" }),
-  });
-  // const serverData = data;
-  console.log("cart-data : ", pickupData);
 
   return (
     <BasicLayout>
@@ -59,11 +48,7 @@ const CartPage = () => {
           </div>
           <hr />
           <div className="page-content">
-            {activeNavBt === 1 ? (
-              <PickUpCart pickupData={pickupData} />
-            ) : (
-              <ShippingCart />
-            )}
+            {activeNavBt === 1 ? <PickUpCart /> : <ShippingCart />}
           </div>
         </InfoWrap>
       </MyWrap>

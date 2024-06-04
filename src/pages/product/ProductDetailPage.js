@@ -14,7 +14,12 @@ import { ProductItemData } from "../../mock/ProductitemData";
 
 import { useQuery } from "react-query";
 import { getDetail } from "../../api/productApi";
-import { postWish } from "../../api/wishListApi";
+import {
+  postWish,
+  useWishDeleteMutation,
+  useWishPostCheckMutation,
+  useWishPostMutation,
+} from "../../api/wishListApi";
 import { placeState } from "../../atom/placeState";
 import {
   BigButton,
@@ -38,7 +43,7 @@ const DetailedItemPage = () => {
   const productItem = ProductItemData[0];
   const selectedPlace = useRecoilValue(placeState);
   const [count, setCount] = useState(1);
-  const [isHeartChecked, setHeartChecked] = useState(1);
+  const [isHeartChecked, setHeartChecked] = useState();
   const [selectedOption, setSelectedOption] = useState("PickUp");
   const [stock, setStock] = useRecoilState(stockState);
   const [isMapModalOpen, setMapModalOpen] = useState(false);
@@ -68,11 +73,6 @@ const DetailedItemPage = () => {
 
   const handleCloseCartModal = () => {
     setCartModalOpen(false);
-  };
-
-  const handleHeartButtonClick = () => {
-    const newValue = !isHeartChecked ? 1 : 0;
-    setHeartChecked(!isHeartChecked);
   };
 
   const AA = styled.div`
@@ -142,18 +142,39 @@ const DetailedItemPage = () => {
   ];
 
   // -------------------찜목록 추가 기능 start ---------------------------
+
+  const { mutate: wishPostMutate } = useWishPostMutation();
+  const { mutate: wishDeleteMutate } = useWishDeleteMutation();
+  const { mutate: wishPostCheckMutate } = useWishPostCheckMutation({
+    setHeartChecked: setHeartChecked,
+  });
+
+  console.log("isHeartChecked", isHeartChecked);
   const fetchData = () => {
-    handleHeartButtonClick();
-    postWish({
-      code: {
-        code: detailParam.code,
-      },
-      successFn,
-      failFn,
-      errorFn: data => {
-        alert("서버상태 불안정 다음에 상품불러오기 시도");
-      },
-    });
+    if (!isHeartChecked) {
+      wishPostMutate(
+        {
+          code: detailParam.code,
+        },
+        {
+          onSuccess: () => {
+            wishPostCheckMutate({ code: detailParam.code });
+          },
+        },
+      );
+    }
+    if (isHeartChecked) {
+      wishDeleteMutate(
+        {
+          code: detailParam.code,
+        },
+        {
+          onSuccess: () => {
+            wishPostCheckMutate({ code: detailParam.code });
+          },
+        },
+      );
+    }
   };
   const successFn = data => {
     // getWishList(data);
@@ -179,7 +200,7 @@ const DetailedItemPage = () => {
     amount: count,
     delivery: selectedOption,
   };
-  console.log("postCard", postCard);
+
   // -------------------찜목록 추가 기능 end ---------------------------
 
   const buy = async () => {
@@ -197,7 +218,8 @@ const DetailedItemPage = () => {
       navigate("/directpay/buy", { state: { info: userInfo } });
     }
     setStock(serverData[0]?.code);
-  }, [userInfo]);
+    wishPostCheckMutate({ code: detailParam.code });
+  }, [userInfo, isHeartChecked]);
 
   return (
     <ItemWrap>
@@ -206,10 +228,14 @@ const DetailedItemPage = () => {
         <div className="information">
           <AA>
             <h1>{serverData[0]?.name}</h1>
-            <HeartButton checked={isHeartChecked} onClick={fetchData}>
+            <HeartButton
+              onClick={() => {
+                fetchData();
+              }}
+            >
               <img
                 src={
-                  isHeartChecked
+                  !isHeartChecked
                     ? process.env.PUBLIC_URL + "/images/heartOff.svg"
                     : process.env.PUBLIC_URL + "/images/heartOn.svg"
                 }

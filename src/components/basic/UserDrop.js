@@ -1,7 +1,5 @@
-import styled from "@emotion/styled/macro";
 import React, { useState } from "react";
 import { Common } from "../../styles/CommonCss";
-import { Flex } from "antd";
 import {
   DropdownContent,
   DropdownItem,
@@ -9,7 +7,6 @@ import {
   ItemBack,
 } from "../../styles/basic/userDropCss";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import { LoggedInContent, LoggedOutContent } from "./UserDropContent";
 import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
 import { activeSideState } from "../../atom/activeSideState";
